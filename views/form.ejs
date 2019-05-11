@@ -41,14 +41,45 @@
                     <label for="message">Message</label>
                     <textarea class="form-control" rows="5" id="message" placeholder="Message"
                         name="message"></textarea>
-                    <br>
-                    <div class="g-recaptcha" data-sitekey="6LfG-KIUAAAAAMORIGeMbnaMvFq4knXUqTBoKEZ0"></div>
-
                 </div>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button class="g-recaptcha btn btn-success" data-sitekey="<%= siteKey%>"
+                    data-callback='onSubmit'>Submit</button>
             </form>
         </div>
     </div>
+
+    <!-- recaptcha -->
+
+    <script>
+        function onSubmit(token) {
+            const name = document.querySelector('#name').value;
+            const message = document.querySelector('#message').value;
+            const subject = document.querySelector('#subject').value;
+            const email = document.querySelector('#email').value;
+            const captcha = document.querySelector('#g-recaptcha-response').value;
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        name: name,
+                        message: message,
+                        subject: subject,
+                        email: email,
+                        captcha: captcha
+                    })
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    alert(data.msg);
+                });
+        }
+    </script>
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
