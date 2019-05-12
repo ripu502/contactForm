@@ -21,7 +21,9 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "nodemailer": "^6.1.1",
-    "request": "^2.88.0"
+    "oauth2": "0.0.1",
+    "request": "^2.88.0",
+    "xoauth2": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"

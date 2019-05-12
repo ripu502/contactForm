@@ -1,6 +1,7 @@
 const keys = require('../config/keys');
 const request = require('request');
 var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
 
 module.exports.getForm = (req, res, next) => {
     res.render('form', { siteKey: keys.siteKey });
@@ -32,25 +33,61 @@ module.exports.postForm = (req, res, next) => {
 
 
         // implementing in the most simple way
+        // const transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         user: keys.gmailId,
+        //         pass: keys.gmailPassword
+        //     }
+        // });
+        // const mailOptions = {
+        //     from: req.body.email, // sender address
+        //     to: req.body.email, // list of receivers
+        //     subject: req.body.subject, // Subject line
+        //     html: `<p>${req.body.message}</p>`// plain text body
+        //   };
+        //   transporter.sendMail(mailOptions, function (err, info) {
+        //     if(err)
+        //       console.log(err)
+        //     else
+        //       console.log(info);
+        //  });
+
         const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
             service: 'gmail',
+            port: 25,
+            secure: false,
             auth: {
-                user: keys.gmailId,
-                pass: keys.gmailPassword
+                xoauth2: xoauth2.createXOAuth2Generator({
+                    user: 'ripu502@gmail.com',
+                    clientId: keys.clientId,
+                    clientSceret: keys.clientSceret,
+                    refreshToken: keys.refreshToken
+                })
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         });
+
         const mailOptions = {
-            from: req.body.email, // sender address
-            to: req.body.email, // list of receivers
-            subject: req.body.subject, // Subject line
-            html: `<p>${req.body.message}</p>`// plain text body
-          };
-          transporter.sendMail(mailOptions, function (err, info) {
-            if(err)
-              console.log(err)
-            else
-              console.log(info);
-         });
+            from: `Ripudaman <ripu502@gmail.com>`,
+            to: 'ripu502@gmail.com',
+            subject: 'My site contact from: ' + req.body.subject,
+            text: req.body.message,
+            html: 'Message from: ' + req.body.name
+                + '<br></br> Email: ' + req.body.email + '<br></br> Message: ' + req.body.message
+        };
+
+        transporter.sendMail(mailOptions, (err, res) => {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log(JSON.stringify(res));
+            }
+        });
+
         res.json({ "msg": "Success" });
         console.log('success');
     });
