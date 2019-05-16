@@ -105,7 +105,7 @@ module.exports.postForm = (req, res, next) => {
         //     secure: false,
         //     auth: {
         //         xoauth2: xoauth2.createXOAuth2Generator({
-        //             user: 'ripu502@gmail.com',
+        //             user: '',
         //             clientId: keys.clientId,
         //             clientSceret: keys.clientSceret,
         //             refreshToken: keys.refreshToken
@@ -117,8 +117,8 @@ module.exports.postForm = (req, res, next) => {
         // });
 
         // const mailOptions = {
-        //     from: `Ripudaman <ripu502@gmail.com>`,
-        //     to: 'ripu502@gmail.com',
+        //     from: `Ripudaman <@gmail.com>`,
+        //     to: '',
         //     subject: 'My site contact from: ' + req.body.subject,
         //     text: req.body.message,
         //     html: 'Message from: ' + req.body.name
