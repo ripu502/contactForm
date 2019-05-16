@@ -49,6 +49,8 @@ module.exports.postForm = (req, res, next) => {
         // and the special toggle should be some
         // refer link :: https://myaccount.google.com/lesssecureapps
         // study link is here https://codeburst.io/sending-an-email-using-nodemailer-gmail-7cfa0712a799
+
+        // sending mail to myself!
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -57,21 +59,37 @@ module.exports.postForm = (req, res, next) => {
             }
         });
         const mailOptions = {
-            from: req.body.email, // sender address
-            to: keys.apiGmail, // site gmail address
+            from: keys.gmailId, // sender mail ID
+            to: keys.gmailId, // send mail Id sending mail to myself
             subject: `Mail by contact form from ${req.body.email}`, // Subject line
-            html: `<p><b>Subject : ${req.body.subject}</b></br>${req.body.message}</p>`// plain text body
+            html: `<p><b>Subject : ${req.body.subject}</b><br>${req.body.message}</p>`// plain text body
         };
         transporter.sendMail(mailOptions, function (err, info) {
             if (err)
-                console.log(err)
+                return res.json({ "msg": "Fail" });
             else
-                console.log(info);
+                console.log('Mail send to me!!!');
+        });
+
+        // sending mail to the sender!
+        // reply!
+
+        const mailOptions2 = {
+            from: keys.gmailId, // sender mail ID
+            to: req.body.email, // send mail Id sending mail to myself
+            subject: `Mail from AutoBOTS502`, // Subject line
+            html: `<p><b> We have received your mail. Reach you soon<b></p>`// plain text body
+        };
+
+        transporter.sendMail(mailOptions2, function (err, info) {
+            if (err)
+                return res.json({ "msg": "Fail" });
+            else
+                res.json({ "msg": "Success" });
         });
 
 
-        res.json({ "msg": "Success" });
-        console.log('success');
+        // console.log('success');
 
 
         // start refering form transversy media 
