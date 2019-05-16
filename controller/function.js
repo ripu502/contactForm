@@ -1,6 +1,8 @@
 const keys = require('../config/keys');
 const request = require('request');
 var nodemailer = require('nodemailer');
+const { validationResult } = require('express-validator/check');
+
 // var xoauth2 = require('xoauth2');
 
 module.exports.getForm = (req, res, next) => {
@@ -8,12 +10,21 @@ module.exports.getForm = (req, res, next) => {
 };
 
 module.exports.postForm = (req, res, next) => {
-    console.log(req.body);
+
+    const errors = validationResult(req);
+    console.log(errors.array());
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ err: errors.array() });
+    }
+
+
+    // console.log(req.body);
     // if the capcha is not selected
     if (req.body.captcha === undefined ||
         req.body.captcha === '' ||
         req.body.captcha === null) {
-        return res.json({ "msg": "Fail from me" });
+        return res.json({ "msg": "Fail" });
     }
 
     // capcha is selected
@@ -49,7 +60,7 @@ module.exports.postForm = (req, res, next) => {
             from: req.body.email, // sender address
             to: keys.apiGmail, // site gmail address
             subject: `Mail by contact form from ${req.body.email}`, // Subject line
-            html: `<p>${req.body.message}</p>`// plain text body
+            html: `<p><b>Subject : ${req.body.subject}</b></br>${req.body.message}</p>`// plain text body
         };
         transporter.sendMail(mailOptions, function (err, info) {
             if (err)
@@ -61,7 +72,7 @@ module.exports.postForm = (req, res, next) => {
 
         res.json({ "msg": "Success" });
         console.log('success');
-        
+
 
         // start refering form transversy media 
         // hope you got
