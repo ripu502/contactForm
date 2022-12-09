@@ -19,7 +19,7 @@
   "homepage": "https://github.com/ripu502/contactForm#readme",
   "dependencies": {
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-validator": "^5.3.1",
     "nodemailer": "^6.1.1",
     "oauth2": "0.0.1",
